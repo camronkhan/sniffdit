@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Sniffdit</title>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  	<link rel="stylesheet" href="stylesheets/style.css">
+  	<script src="bower_components/jquery/dist/jquery.js"></script>
+  	<script src="bower_components/angular/angular.js"></script>
+  	<script src="bower_components/angular-route/angular-route.js"></script>
+  	<script src="bower_components/angular-resource/angular-resource.js"></script>
+  	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="javascripts/sniffditApp.js"></script>
+</head>
+<body ng-app="sniffditApp">
+	<div id='main' class="container">
+		<nav class="navbar-fluid navbar-default navbar-fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="#"> Sniffdit </a>
+			</div>
+		</nav>
+		<div class="main" ng-view>
+		</div>
+	</div>
+</body>
+</html>

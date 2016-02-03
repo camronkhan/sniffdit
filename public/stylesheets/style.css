@@ -1,8 +1,49 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.main {
+	margin-top: 50px;
+	background-color: black;
 }
 
-a {
-  color: #00B7FF;
+.post {
+	display: inline-block;
+	background-color: white;
+	border: 1px solid gray;
+	padding: 20px;
+	margin: 20px;
+}
+
+.grid-item-img-wrap {
+	max-width: 180px;
+	max-width: 180px;
+	height: 180px;
+	max-height: 180px;
+	background-size: cover;
+	background-position: center;
+	margin-left: auto
+	margin-right: auto;
+	display: block;
+}
+
+
+/****** MASONRY ******/
+
+.grid-item--width1 {
+	width: 200px;
+	max-width: 200px;
+}
+
+.grid-item--height1{
+
+	height: 200px;
+	max-height:200px;
+
+}
+
+.grid-item--width2 {
+	width: 400px;
+	max-width: 400px;
+}
+
+.grid-item--height2 {
+	height: 400px;
+	max-height: 400px;
 }

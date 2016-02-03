@@ -1,0 +1,11 @@
+<div class="grid" id="post-stream">
+	<div class="post" ng-repeat="post in posts | orderBy:'posted_on':true" ng-class-odd="'odd'" ng-class-even="'even'">
+		<div class="grid-item--height2 grid-item--width1">
+			<div class="grid-item-img-wrap" ng-style="{'background-image':'url({{post.img}})'}"></div>
+			<p><a href="{{post.url}}">{{post.title}}</a></p>
+			<small>Posted by {{post.posted_by}}</small>
+			<br>
+			<small>{{post.posted_on | date:"h:mma 'on' MMM d, y"}}</small>
+		</div>
+	</div>
+</div>
