@@ -2,7 +2,7 @@
 Import dependencies
 =================*/
 
-console.log('\nInitiated scrapeRssFeeds.js\n');
+console.log('\nInitiating scrapeRssFeeds.js\n');
 console.log('Importing dependencies...\n');
 
 var fs = require('fs');
@@ -20,23 +20,7 @@ Select RSS sources
 ================*/
 
 // JS Object to store RSS sources
-var sources = [
-	{
-		name: 'Dogster',
-    	url: 'http://www.dogster.com/feed/'
-    }
-    //{ dogtime      : 'http://dogtime.com/feed' },
-    //{ barkpost     : 'http://barkpost.com/feed/'},
-    //{ dogshaming   : 'http://www.dogshaming.com/feed/'},
-    //{ lifewithdogs : 'http://www.lifewithdogs.tv/feed/'}
-];
-
-console.log('RSS sources to be scanned:');
-sources.forEach(function(source) {
-	console.log(`- ${source.name}: ${source.url}`);
-});
-console.log();
-
+var source = { name : 'Dogster', url : 'http://www.dogster.com/feed/' };
 
 /*===============
 Parse XML to JSON
@@ -108,9 +92,70 @@ function prepDocs(data, callback) {
 };
 
 
+/*===============
+Insert docs in DB
+===============*/
 
+function insertDocs(docs, callback) {
 
+	// Create array to store inserted docs
+	var docsInserted = [];
+	var errsOccurred = [];
 
+	// Set counter to length of document array
+	var docsToProcess = docs.length;
+
+	// For each document in the array
+	docs.forEach(function(doc) {
+
+		// Set query criteria to compare URLs
+		var query = { "url" : doc.url };
+
+		// Set document to be inserted if unique
+		var update = {
+			"title"     : doc.title,
+			"source"    : doc.source,
+			"url"       : doc.url,
+			"teaser"    : doc.teaser,
+			"img"       : doc.img,
+			"posted_by" : doc.posted_by
+		};
+
+		// Set options
+		var options = {
+			new    : true,  // Returns inserted document to callback
+			upsert : true   // Inserts document to DB if not found
+		};
+
+		// Call Mongoose method on Post model to insert document if unique
+		Post.findOneAndUpdate(query, update, options, function(err, doc) {
+
+			// Check insertion status
+			if (err) {
+				// On insertion error, push error to array
+				errsOccurred.push(err);
+			} else {
+				// On successful insertion, push doc to array
+				docsInserted.push(doc);
+			}
+
+			// Process the next document
+			processNextDoc();
+		});
+	});
+
+	// Helper function to pass arrays to callback upon completion of forEach loop
+	function processNextDoc() {
+		
+		// Decrement number of documents to process
+		docsToProcess--;
+
+		// If all documents have been processed, pass arrays to callback
+		if (docsToProcess < 1) {
+			callback(errsOccurred, docsInserted);
+		}
+	};
+};
 
 
 /*===========
@@ -135,35 +180,61 @@ mongoose.connect(dbURI, function(err) {
 		console.log(`Mongoose default connection open to ${dbURI}\n`);
 	}
 
-	// Scan RSS sources for data
-	sources.forEach(function(source) {
+	console.log(`Scanning ${source.name} (${source.url}) for RSS feed data\n`);
 
-		console.log('Scanning sources for RSS feed data\n');
+	// Convert fetched XML data to JSON
+	xmlToJson(source.url, function(err, data) {
 
-		// Convert XML to JSON
-		xmlToJson(source.url, function(err, data) {
+		// Check conversion status
+		if (err) {
+			// On conversion error
+			console.log(`XML to JSON conversion error: ${err.message}\n`);
+		} else {
+			// On successful conversion
+			console.log('RSS data successfully converted to JSON\n');
+		}
 
-			// Check conversion status
-			if (err) {
-				// On conversion error
-				console.log(`XML to JSON conversion error: ${err.message}\n`);
-			} else {
-				// On successful conversion
-				console.log('RSS data successfully converted to JSON\n');
-			}
+		// Prepare list of documents to be inserted in DB
+		prepDocs(data, function(docs) {
 
-			// Prepare list of documents to be inserted in DB
-			prepDocs(data, function(docs) {
+			// On successful preparation
+			console.log('Documents ready to be inserted into DB\n');
 
-				docs.forEach(function(obj) {
-					console.log(JSON.stringify(obj));
-				});
+			console.log('Inserting documents...\n')
 
-				//docs.forEach(function(doc) {
-				//	console.log(`In main function: ${doc}\n`);
-				//});
+			// Insert documents into DB
+			insertDocs(docs, function(errArr, docArr) {
 
+				// Report number of errors occurred during insertion
+				console.log(`${errArr.length} error(s) occurred during insertion\n`);
 
+				// If errors occurred, print to console
+				if (errArr.length > 0) {
+					console.log('Insertion errors:');
+					console.log('-----------------');
+					errArr.forEach(function(err) {
+						console.log(err);
+					});
+				}
+
+				// Report number of documents inserted to DB
+				console.log(`${docArr.length} document(s) successfully inserted to DB\n`);
+
+				// If documents inserted, print to console
+				if (docArr.length > 0) {
+					console.log('Inserted documents:');
+					console.log('-------------------');
+					docArr.forEach(function(doc) {
+						console.log(`<${doc.source}> ${doc.title}`);
+					});
+				}
+
+				// Close DB connection
+				mongoose.connection.close(function () { 
+				    console.log(`\nClosing Mongoose default connection to ${dbURI}\n`); 
+				    console.log('Exiting scrapeRssFeeds.js\n');
+				    process.exit(0);
+				}); 			
 			});
 		});
 	});
