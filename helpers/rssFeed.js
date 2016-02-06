@@ -1,6 +1,27 @@
+/*=================
+Import dependencies
+=================*/
 var fs = require('fs');
 var parseString = require('xml2js').parseString;
 var http = require('http');
+var mongoose = require('mongoose');
+var Post = mongoose.model('Post');
+
+// Connect to MongoDB
+//mongoose.connect('mongodb://heroku_7lc0mtlx:oprpm8qk1bsutacblsk6cli4d3@ds055555.mongolab.com:55555/heroku_7lc0mtlx');
+
+/*================
+Select RSS sources
+================*/
+
+// JS Object to store RSS sources
+var sources = {
+    dogster:    'http://www.dogster.com/feed/',
+    //dogtime:    'http://dogtime.com/feed',
+    //barkpost:   'http://barkpost.com/feed/',
+    //dogshaming: 'http://www.dogshaming.com/feed/'
+};
+
 
 /*===============
 Parse XML to JSON
@@ -37,28 +58,24 @@ function xmlToJson(url, callback) {
     });
 }
 
-/*================
-Select RSS sources
-================*/
-
-// JS Object to store RSS sources
-var sources = {
-    dogster:    'http://www.dogster.com/feed/',
-    //dogtime:    'http://dogtime.com/feed',
-    //barkpost:   'http://barkpost.com/feed/',
-    //dogshaming: 'http://www.dogshaming.com/feed/'
-};
-
 
 /*==========
 Get RSS data
 ==========*/
 
+function getRssData(url, callback) {}
+
+
+
+
+// Store fetched RSS data in JSON object
+var rssData = {};
+
 // For each site in the source list
 for (site in sources) {
     
     // Notify console
-    console.log(`Scanning ${site}: ${sources[site]}`);
+    console.log(`Scanning ${site}: ${sources[site]}\n\n`);
     
     // Fetch XML data and convert to JSON
     xmlToJson(sources[site], function(err, data) {
@@ -69,13 +86,16 @@ for (site in sources) {
         }
         
         // Store RSS data
-        var rssData = JSON.parse(data);
+        rssData = JSON.stringify(data);
+        //console.log(rssData);
     });
 }
 
+console.log('And the results are in...');
+console.log(rssData);
+
 /*===============================
 Create documents per Posts schema
-===============================*/
 
 // Array to store documents
 var docArr = [];
@@ -91,7 +111,7 @@ rssData.rss.channel[0].item.forEach(function(obj) {
     });
 });
 
-
+console.log(`${docArr.length} documents added to document array`);
 
 /*================================
 Insert docs to DB if not duplicate
@@ -149,9 +169,7 @@ Insert docs to DB if not duplicate
 
 
 
-
-
-
+/*
 
 // Unique filename
 var rssFilename = 'rss' + Date.now() + '.json';
@@ -180,4 +198,4 @@ for (site in sources) {
     });
 }
 
-console.log(`\nScanning complete\n\nRSS data stored in ${rssFilename}\n`);
+console.log(`\nScanning complete\n\nRSS data stored in ${rssFilename}\n`);*/
