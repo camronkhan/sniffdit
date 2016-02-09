@@ -35,7 +35,7 @@ var processSources = function (sources, callback) {
 						console.log('Insertion errors:');
 						console.log('-----------------');
 						errArr.forEach(function(err) {
-							console.log(err);
+							console.log(err.message);
 						});
 						console.log();
 					}

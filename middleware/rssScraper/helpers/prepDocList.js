@@ -12,6 +12,7 @@ var prepDocList = function (data, callback) {
 				"title"		: itm.title[0],
 				"source"    : chnl.title[0],
 				"url"       : itm.link[0],
+				"pub_date"  : itm.pubDate[0],
 				"teaser"    : itm.description[0],
 				"img"       : "http://www.lifewithdogs.tv/wp-content/uploads/2014/03/3.21.14-National-Puppy-Day22.jpg",
 				"posted_by" : "Sniffdit"

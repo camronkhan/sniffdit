@@ -19,6 +19,7 @@ var insertDocsToDb = function (docs, callback) {
 			"title"     : doc.title,
 			"source"    : doc.source,
 			"url"       : doc.url,
+			"pub_date"  : doc.pub_date,
 			"teaser"    : doc.teaser,
 			"img"       : doc.img,
 			"posted_by" : doc.posted_by

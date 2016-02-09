@@ -17,14 +17,14 @@ app.factory('postService', function($resource) {
 
 app.controller('mainController', function($scope, postService) {
 	$scope.posts = postService.query();
-	$scope.newPost = { title: '', url: '', img: '', posted_by: '', posted_on: '' };
+	$scope.newPost = { title: '', url: '', pub_date: '', img: '', posted_by: '', posted_on: '' };
 
 	$scope.post = function(){
 		$scope.newPost.posted_by = $rootScope.current_user;
 		$scope.newPost.posted_on = Date.now();
 		postService.save($scope.newPost, function() {
 			$scope.posts = postService.query();
-			$scope.newPost = { title: '', url: '', img: '', posted_by: '' };
+			$scope.newPost = { title: '', url: '', pub_date: '', img: '', posted_by: '' };
 		});
 	};
 

@@ -4,6 +4,7 @@ var postSchema = new mongoose.Schema({
 	title     : String,
 	source    : String,
 	url       : { type: String, unique: true },
+	pub_date  : String,
 	teaser    : String,
 	img       : String,
 	posted_by : String,
