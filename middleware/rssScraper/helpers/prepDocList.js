@@ -7,6 +7,9 @@ var prepDocList = function (data, callback) {
 	data.rss.channel.forEach(function(chnl) {
 		chnl.item.forEach(function(itm) {
 
+			// Extract image for thumbnail
+			var currentImg = /<img.*?src="(.*?)"/.exec(itm['content:encoded'][0]);
+
 			// Create document from RSS data
 			var currentDoc = {
 				"title"		: itm.title[0],
@@ -14,7 +17,7 @@ var prepDocList = function (data, callback) {
 				"url"       : itm.link[0],
 				"pub_date"  : itm.pubDate[0],
 				"teaser"    : itm.description[0],
-				"img"       : "http://www.lifewithdogs.tv/wp-content/uploads/2014/03/3.21.14-National-Puppy-Day22.jpg",
+				"img"       : currentImg,
 				"posted_by" : "Sniffdit"
 			};
 
