@@ -32,8 +32,8 @@ sources.forEach(function(source) {
 console.log();
 
 // Set database URI
-//var dbURI = 'mongodb://heroku_7lc0mtlx:oprpm8qk1bsutacblsk6cli4d3@ds055555.mongolab.com:55555/heroku_7lc0mtlx';
-var dbURI = 'mongodb://localhost:27017/sniffdit';
+var dbURI = 'mongodb://heroku_7lc0mtlx:oprpm8qk1bsutacblsk6cli4d3@ds055555.mongolab.com:55555/heroku_7lc0mtlx';
+//var dbURI = 'mongodb://localhost:27017/sniffdit';
 
 // Connect to DB
 mongoose.connect(dbURI, function(err) {
