@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var models = require('./../../../models/post');
 var Post = mongoose.model('Post');
 
-var insertDocsToDb = function (docs, callback) {
+var insertDocsToDb2 = function (docs, callback) {
 
 	// Create array to store inserted docs
 	var docsInserted = [];
@@ -14,7 +14,6 @@ var insertDocsToDb = function (docs, callback) {
 	// For each document in the array
 	docs.forEach(function(doc) {
 
-		// Create new post instance
 		var newPost = new Post({
 			"title"     : doc.title,
 			"source"    : doc.source,
@@ -24,7 +23,6 @@ var insertDocsToDb = function (docs, callback) {
 			"posted_by" : doc.posted_by
 		});
 
-		// Insert post
 		newPost.save(function (err, newPost) {
 			
 			// Check insertion status
@@ -39,6 +37,7 @@ var insertDocsToDb = function (docs, callback) {
 			// Process the next document
 			processNextDoc();
 		});
+
 	});
 
 	// Helper function to pass arrays to callback upon completion of forEach loop
@@ -54,4 +53,4 @@ var insertDocsToDb = function (docs, callback) {
 	};
 };
 
-module.exports = insertDocsToDb;
+module.exports = insertDocsToDb2;
