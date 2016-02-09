@@ -1319,5 +1319,5 @@ var rssObj = {
 //var dataStr = JSON.stringify();
 
 rssObj.rss.channel[0].item.forEach(function(obj) {
-  console.log(obj.title[0]);
+  console.log(obj['content:encoded'][0]);
 });

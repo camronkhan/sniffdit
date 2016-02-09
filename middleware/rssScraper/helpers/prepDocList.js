@@ -17,7 +17,7 @@ var prepDocList = function (data, callback) {
 				"url"       : itm.link[0],
 				"pub_date"  : itm.pubDate[0],
 				"teaser"    : itm.description[0],
-				"img"       : currentImg,
+				"img"       : currentImg[1],
 				"posted_by" : "Sniffdit"
 			};
 
